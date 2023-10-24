@@ -1,7 +1,13 @@
-import { Elysia } from "elysia";
+import { PrismaClient } from "@prisma/client";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const prisma = new PrismaClient();
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+await prisma.user.create({
+  data: {
+    name: "Roman Tkachenya",
+    email: `tkachenya-${Math.random()}@gmail.com`,
+  },
+});
+
+const count = await prisma.user.count();
+console.log(`There are ${count} users in the database.`);
