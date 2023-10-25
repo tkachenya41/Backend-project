@@ -1,13 +1,14 @@
+import { Elysia } from "elysia";
+import { deleteInfo, getInfo, postInfo, updateInfo } from "./routes/routes";
 
 const app = new Elysia();
 
-app.get("/", () => "Method get created!");
+app.get("/boilerplate", getInfo);
 
-app.post("/post", () => "Method post created!");
+app.post("/boilerplate", postInfo);
 
-app.put("/update", () => "Method put created!");
+app.put("/boilerplate", updateInfo);
 
-app.delete("/delete", () => "Method delete created!");
+app.delete("/boilerplate", deleteInfo);
 
 app.listen(3000);
-
