@@ -1,14 +1,8 @@
 import { Elysia } from "elysia";
-import { deleteInfo, getInfo, postInfo, updateInfo } from "./routes/routes";
+import { routes } from "./routes/routes";
 
 const app = new Elysia();
 
-app.get("/boilerplate", getInfo);
+app.use(routes);
 
-app.post("/boilerplate", postInfo);
-
-app.put("/boilerplate", updateInfo);
-
-app.delete("/boilerplate", deleteInfo);
-
-app.listen(3000);
+export default app;

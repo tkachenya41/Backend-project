@@ -1,7 +1,12 @@
-export const getInfo = () => "Method get created";
+import Elysia from "elysia";
+import { boilerplate } from "../boilerplate";
 
-export const postInfo = () => "Method post created";
-
-export const updateInfo = () => "Method update created";
-
-export const deleteInfo = () => "Method delete created";
+export const routes = (app: Elysia) =>
+  app.group("/boilerplate", (group) =>
+    group
+      .get("/", boilerplate.get)
+      .post("/", boilerplate.post)
+      .put("/", boilerplate.put)
+      .delete("/", boilerplate.delete)
+      .listen(3000)
+  );
