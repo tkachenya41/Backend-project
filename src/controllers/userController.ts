@@ -1,5 +1,5 @@
-import Elysia from "elysia";
 import { prisma } from "../model/prisma";
+import { Body } from "../utils/utils";
 
 export const user = {
   getById: (userId: number) => {
@@ -9,23 +9,33 @@ export const user = {
       },
     });
   },
+
   getAll: () => prisma.user.findMany(),
-  post: () =>
-    prisma.user.create({
+
+  post: (body: Body) => {
+    return prisma.user.create({
       data: {
-        name: "John",
-        email: "john243@example.com",
+        name: body.name,
+        email: body.email,
       },
-    }),
-  put: () =>
-    prisma.user.update({
+    });
+  },
+
+  put: (body: Body) => {
+    return prisma.user.update({
       where: {
-        id: 10,
+        id: body.id,
       },
-      data: { name: "Updated name" },
-    }),
-  delete: () =>
-    prisma.user.deleteMany({
-      where: { id: 11 },
-    }),
+      data: {
+        email: body.email,
+        name: body.name,
+      },
+    });
+  },
+
+  delete: (body: Body) => {
+    return prisma.user.deleteMany({
+      where: { id: body.id },
+    });
+  },
 };
