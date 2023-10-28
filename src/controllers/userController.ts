@@ -24,33 +24,38 @@ export const user = {
     }
 
     const user = await prisma.user.create({
-      data: {
-        name: body.name,
-        email: body.email,
-      },
+      data: body,
     });
 
     return user;
   },
 
   put: async (body: Body, set: Set) => {
+    if (!body.id) {
+      set.status = 400;
+      return "ID is required";
+    }
+
     try {
       const user = await prisma.user.update({
         where: {
           id: body.id,
         },
-        data: {
-          email: body.email,
-        },
+        data: body,
       });
       return user;
     } catch {
-      set.status = 400;
+      set.status = 404;
       return "User not found";
     }
   },
 
   delete: async (body: Body, set: Set) => {
+    if (!body.id) {
+      set.status = 400;
+      return "ID is required";
+    }
+
     try {
       const user = await prisma.user.deleteMany({
         where: { id: body.id },
