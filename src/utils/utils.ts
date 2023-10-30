@@ -5,6 +5,6 @@ export interface Body {
   password: string;
 }
 
-export interface Set {
+export interface Response {
   status: number;
 }

@@ -6,5 +6,3 @@ const app = new Elysia();
 routes(app);
 
 app.listen(3000);
-
-export default app;

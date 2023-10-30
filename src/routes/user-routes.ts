@@ -1,6 +1,6 @@
 import Elysia, { t } from "elysia";
-import { user } from "../controllers/userController";
-import { Set } from "../utils/utils";
+import { user } from "@/controllers/userController";
+import { Response } from "@/utils/utils";
 
 const userBodyCheck = {
   body: t.Object({
@@ -15,14 +15,22 @@ export const userRoutes = (app: Elysia) =>
   app.group("/users", (group) =>
     group
       .get("/:id", ({ params: { id }, set }) =>
-        user.getById(Number(id), set as Set)
+        user.getById(Number(id), set as Response)
       )
       .get("/", user.getAll)
-      .post("/", ({ body, set }) => user.post(body, set as Set), userBodyCheck)
-      .put("/", ({ body, set }) => user.put(body, set as Set), userBodyCheck)
+      .post(
+        "/",
+        ({ body, set }) => user.post(body, set as Response),
+        userBodyCheck
+      )
+      .put(
+        "/",
+        ({ body, set }) => user.put(body, set as Response),
+        userBodyCheck
+      )
       .delete(
         "/",
-        ({ body, set }) => user.delete(body, set as Set),
+        ({ body, set }) => user.delete(body, set as Response),
         userBodyCheck
       )
   );

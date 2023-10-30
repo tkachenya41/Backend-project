@@ -1,8 +1,8 @@
-import { prisma } from "../model/prisma";
-import { Body, Set } from "../utils/utils";
+import { prisma } from "@/model/prisma";
+import { Body, Response } from "@/utils/utils";
 
 export const user = {
-  getById: async (userId: number, set: Set) => {
+  getById: async (userId: number, set: Response) => {
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -17,7 +17,7 @@ export const user = {
 
   getAll: () => prisma.user.findMany(),
 
-  post: async (body: Body, set: Set) => {
+  post: async (body: Body, set: Response) => {
     if (!body.email) {
       set.status = 400;
       return "Email is required";
@@ -30,7 +30,7 @@ export const user = {
     return user;
   },
 
-  put: async (body: Body, set: Set) => {
+  put: async (body: Body, set: Response) => {
     if (!body.id) {
       set.status = 400;
       return "ID is required";
@@ -50,7 +50,7 @@ export const user = {
     }
   },
 
-  delete: async (body: Body, set: Set) => {
+  delete: async (body: Body, set: Response) => {
     if (!body.id) {
       set.status = 400;
       return "ID is required";
