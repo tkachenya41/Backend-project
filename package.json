@@ -11,7 +11,8 @@
     "prisma": "^5.4.2"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "eslint": "^8.52.0"
   },
   "module": "src/index.js"
 }
