@@ -1,8 +1,11 @@
-import { Elysia } from "elysia";
-import { routes } from "./routes/index";
+import { Hono } from 'hono';
+import { userRoutes } from './routes';
 
-const app = new Elysia();
+const app = new Hono().basePath('/users');
 
-routes(app);
+app.route('', userRoutes());
 
-app.listen(3000);
+export default {
+  port: 8000,
+  fetch: app.fetch,
+};

@@ -1,41 +1,55 @@
-import { prisma } from "@/model/prisma";
-import { Body, Response } from "@/utils/utils";
+import { prisma } from '@/model/prisma';
+import { Body, errorCode } from '@/utils/utils';
+import { DBError } from '@/validation/custom-error';
 
 export const user = {
-  getById: async (userId: number, set: Response) => {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      set.status = 400;
-      return "User not found";
+  getById: async (id: number) => {
+    if (isNaN(id)) {
+      throw new DBError('UserId should be a number.', errorCode.INVALID);
     }
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: id },
+      });
 
-    return user;
+      if (!user) {
+        throw new DBError(`User is not found`, errorCode.NOT_FOUND);
+      }
+
+      return user;
+    } catch (error) {
+      if (error instanceof DBError) {
+        throw new DBError(error.message, errorCode.CONNECTION);
+      }
+    }
   },
 
-  getAll: () => prisma.user.findMany(),
-
-  post: async (body: Body, set: Response) => {
-    if (!body.email) {
-      set.status = 400;
-      return "Email is required";
-    }
-
-    const user = await prisma.user.create({
-      data: body,
-    });
-
-    return user;
+  getAll: async () => {
+    const users = await prisma.user.findMany();
+    return users;
   },
 
-  put: async (body: Body, set: Response) => {
-    if (!body.id) {
-      set.status = 400;
-      return "ID is required";
-    }
+  post: async (body: Body) => {
+    try {
+      const user = await prisma.user.create({
+        data: {
+          id: body.id,
+          email: body.email,
+          name: body.name,
+          password: body.password,
+        },
+      });
 
+      return user;
+    } catch {
+      throw new DBError(
+        `Something went wrond with DataBase, probably using existing 'id' property`,
+        errorCode.INTERNAL_SERVER_ERROR,
+      );
+    }
+  },
+
+  put: async (body: Body) => {
     try {
       const user = await prisma.user.update({
         where: {
@@ -45,25 +59,23 @@ export const user = {
       });
       return user;
     } catch {
-      set.status = 404;
-      return "User not found";
+      throw new DBError('User not found', errorCode.NOT_FOUND);
     }
   },
 
-  delete: async (body: Body, set: Response) => {
-    if (!body.id) {
-      set.status = 400;
-      return "ID is required";
+  delete: async (id: number) => {
+    if (isNaN(id)) {
+      throw new DBError('UserId should be a number.', errorCode.INVALID);
     }
 
     try {
-      const user = await prisma.user.deleteMany({
-        where: { id: body.id },
+      const user = await prisma.user.delete({
+        where: { id: id },
       });
+
       return user;
-    } catch {
-      set.status = 400;
-      return "User not found";
+    } catch (error) {
+      throw new DBError(`${id} is not found`, errorCode.NOT_FOUND);
     }
   },
 };

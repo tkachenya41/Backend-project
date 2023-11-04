@@ -1,10 +1,13 @@
 export interface Body {
   id: number;
-  name?: string;
+  name: string;
   email: string;
   password: string;
 }
 
-export interface Response {
-  status: number;
-}
+export const errorCode = {
+  NOT_FOUND: 'NOT_FOUND',
+  INVALID: 'INVALID',
+  CONNECTION: 'CONNECTION',
+  INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
+};
