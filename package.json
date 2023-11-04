@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.4.2",
-    "elysia": "latest",
+    "hono": "latest",
     "prisma": "^5.4.2"
   },
   "devDependencies": {
