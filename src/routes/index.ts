@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { user } from '@/controllers/userController';
 import { DBError } from '@/validation/custom-error';
 import { errorCode } from '@/utils/utils';
+import { BodySchema, formatZodError } from '@/validation/body-check';
 
 export const userRoutes = () => {
   const app = new Hono();
@@ -40,13 +41,23 @@ export const userRoutes = () => {
   });
   app.post('/', async (c) => {
     const body = await c.req.json();
-    const createdUser = await user.post(body);
-    return c.json(createdUser);
+    try {
+      BodySchema.parse(body);
+      const createdUser = await user.post(body);
+      return c.json(createdUser);
+    } catch (error) {
+      return formatZodError(error, c);
+    }
   });
   app.put('/', async (c) => {
     const body = await c.req.json();
-    const updatedUser = await user.put(body);
-    return c.json(updatedUser);
+    try {
+      BodySchema.parse(body);
+      const updatedUser = await user.put(body);
+      return c.json(updatedUser);
+    } catch (error) {
+      return formatZodError(error, c);
+    }
   });
   app.delete('/:id', async (c) => {
     const id = c.req.param('id');
