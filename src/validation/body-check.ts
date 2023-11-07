@@ -7,8 +7,8 @@ export const BodySchema = z.object({
     .string()
     .min(1)
     .max(50)
-    .regex(/^[a-z\s]+$/i),
-  email: z.string().email(),
+    .regex(/^[A-Za-z ]+$/),
+  email: z.string().regex(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i),
   password: z
     .string()
     .min(6)
@@ -23,3 +23,10 @@ export const formatZodError = (error: unknown, c: Context) => {
     return c.json({ errors: formattedError.fieldErrors });
   }
 };
+
+export interface Body {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+}

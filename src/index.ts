@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
-import { routes } from '@/routes/index';
+import { userRoutes } from './routes';
 
-const app = new Hono();
+const app = new Hono().basePath('/users');
 
-app.route('', routes);
+app.route('', userRoutes());
 
 export default {
   port: 8000,
