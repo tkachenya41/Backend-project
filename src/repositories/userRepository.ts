@@ -57,10 +57,6 @@ const userRepository = {
   },
 
   delete: async (id: number) => {
-    if (isNaN(id)) {
-      throw new DBError('UserId should be a number.', errorCode.INVALID);
-    }
-
     try {
       const user = await prisma.user.delete({
         where: { id: id },
