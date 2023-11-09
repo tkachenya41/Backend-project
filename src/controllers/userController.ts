@@ -30,4 +30,14 @@ export const userController = {
     const userById = await userRepository.delete(Number(id));
     return c.json(userById);
   },
+  addPost: async (c: Context) => {
+    const body = await c.req.json();
+    const post = await userRepository.addPost(body, body);
+    return c.json(post);
+  },
+  getPost: async (c: Context) => {
+    const { id } = c.req.param();
+    const posts = await userRepository.getPost(Number(id));
+    return c.json(posts);
+  },
 };

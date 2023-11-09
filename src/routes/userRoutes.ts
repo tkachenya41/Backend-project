@@ -13,3 +13,5 @@ userRoutes.get('/', userController.getAll);
 userRoutes.post('/', zValidator('json', BodySchema), userController.post);
 userRoutes.put('/', zValidator('json', BodySchema), userController.put);
 userRoutes.delete('/:id', validateUserId, userController.delete);
+userRoutes.post('/posts', userController.addPost);
+userRoutes.get('/posts/:id', userController.getPost);

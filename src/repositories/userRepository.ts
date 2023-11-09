@@ -1,7 +1,7 @@
 import { prisma } from '@/model/prisma';
 import { errorCode } from '@/utils/utils';
 import { DBError } from '@/utils/custom-error';
-import { User } from '@prisma/client/edge';
+import { Post, User } from '@prisma/client';
 
 const userRepository = {
   getById: async (id: number) => {
@@ -65,6 +65,31 @@ const userRepository = {
     } catch (error) {
       throw new DBError(`${id} is not found`, errorCode.NOT_FOUND);
     }
+  },
+  addPost: async (user: User, posts: Post) => {
+    const post = await prisma.user.create({
+      data: {
+        id: user.id,
+        email: user.email,
+        password: user.password,
+        name: user.name,
+        post: {
+          create: { title: posts.title },
+        },
+      },
+    });
+    return post;
+  },
+  getPost: async (id: number) => {
+    const post = await prisma.user.findFirst({
+      where: {
+        id: id,
+      },
+      select: {
+        post: true,
+      },
+    });
+    return post;
   },
 };
 
