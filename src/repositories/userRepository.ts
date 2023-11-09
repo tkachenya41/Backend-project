@@ -1,19 +1,18 @@
 import { prisma } from '@/model/prisma';
-import {  errorCode } from '@/utils/utils';
+import { errorCode } from '@/utils/utils';
 import { DBError } from '@/utils/custom-error';
-import {User} from '@prisma/client/edge';
+import { User } from '@prisma/client/edge';
 
 const userRepository = {
   getById: async (id: number) => {
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+    });
 
-      const user = await prisma.user.findUnique({
-        where: { id: id },
-      });
-
-      if (!user) {
-        throw new DBError(`User is not found`, errorCode.NOT_FOUND);
-      }
-      return user
+    if (!user) {
+      throw new DBError(`User is not found`, errorCode.NOT_FOUND);
+    }
+    return user;
   },
 
   getAll: async () => {
@@ -22,7 +21,7 @@ const userRepository = {
   },
 
   post: async (body: User) => {
-    const hash = await Bun.password.hash(body.password)
+    const hash = await Bun.password.hash(body.password);
     try {
       const user = await prisma.user.create({
         data: {
@@ -34,9 +33,9 @@ const userRepository = {
       });
 
       return user;
-    } catch(err) {
+    } catch (err) {
       throw new DBError(
-        `Something went wrond with DataBase, probably using existing 'id' property`,
+        `Something went wrong with DataBase, probably using existing 'id' or 'email' property`,
         errorCode.INTERNAL_SERVER_ERROR,
       );
     }
