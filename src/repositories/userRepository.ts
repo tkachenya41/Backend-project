@@ -1,7 +1,7 @@
 import { prisma } from '@/model/prisma';
 import { errorCode } from '@/utils/utils';
 import { DBError } from '@/utils/custom-error';
-import { Post, User } from '@prisma/client';
+import { User } from '@prisma/client';
 
 export const userRepository = {
   getById: async (id: number) => {

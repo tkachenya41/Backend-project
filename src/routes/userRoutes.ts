@@ -3,7 +3,6 @@ import { userController } from '@/controllers/userController';
 import { UserBodySchema } from '@/validation/body-check';
 import { zValidator } from '@hono/zod-validator';
 import { validateUserId } from '@/middlewares/userValidation';
-import { postController } from '@/controllers/postController';
 
 export const userRoutes = new Hono().basePath('/users');
 

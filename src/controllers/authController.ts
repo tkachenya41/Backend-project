@@ -1,7 +1,6 @@
 import { Context } from 'hono';
 import { sign } from 'hono/jwt';
 import userRepository from '@/repositories/userRepository';
-import { DBError } from '@/utils/custom-error';
 
 export const authController = {
   getToken: async (c: Context) => {

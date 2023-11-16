@@ -1,5 +1,4 @@
 import { postRepository } from '@/repositories/postRepository';
-import userRepository from '@/repositories/userRepository';
 import { Context } from 'hono';
 
 export const postController = {
