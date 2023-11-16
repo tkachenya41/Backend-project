@@ -1,9 +1,10 @@
-import { DBError } from '@/utils/custom-error';
-import { errorCode } from '@/utils/utils';
-import { validator } from 'hono/validator';
+import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
 
-export const validateSign = validator('json', (value) => {
-  if (!value.email || !value.password) {
-    throw new DBError('Email and password required', errorCode.INVALID);
-  }
-});
+export const validateSign = zValidator(
+  'json',
+  z.object({
+    email: z.string(),
+    password: z.string(),
+  }),
+);

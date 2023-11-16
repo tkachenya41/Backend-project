@@ -3,8 +3,9 @@ import { Context } from 'hono';
 
 export const userController = {
   getById: async (c: Context) => {
-    const { id } = c.req.param();
-    const userById = await userRepository.getById(Number(id));
+    // @ts-ignore
+    const { id } = c.req.valid('param');
+    const userById = await userRepository.getById(id);
     return c.json(userById);
   },
 
@@ -13,15 +14,15 @@ export const userController = {
     return c.json(users);
   },
 
-  post: async (c: Context) => {
+  create: async (c: Context) => {
     const body = await c.req.json();
-    const createdUser = await userRepository.post(body);
+    const createdUser = await userRepository.create(body);
     return c.json(createdUser);
   },
 
-  put: async (c: Context) => {
+  update: async (c: Context) => {
     const body = await c.req.json();
-    const updatedUser = await userRepository.put(body);
+    const updatedUser = await userRepository.update(body);
     return c.json(updatedUser);
   },
 
@@ -29,15 +30,5 @@ export const userController = {
     const id = c.req.param('id');
     const userById = await userRepository.delete(Number(id));
     return c.json(userById);
-  },
-  addPost: async (c: Context) => {
-    const body = await c.req.json();
-    const post = await userRepository.addPost(body, body);
-    return c.json(post);
-  },
-  getPost: async (c: Context) => {
-    const { id } = c.req.param();
-    const posts = await userRepository.getPost(Number(id));
-    return c.json(posts);
   },
 };

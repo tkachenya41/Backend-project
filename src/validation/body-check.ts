@@ -1,7 +1,6 @@
-import { Context } from 'hono';
 import { z } from 'zod';
 
-export const BodySchema = z.object({
+export const UserBodySchema = z.object({
   id: z.number().optional(),
   name: z
     .string()

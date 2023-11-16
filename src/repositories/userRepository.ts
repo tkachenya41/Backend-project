@@ -3,7 +3,7 @@ import { errorCode } from '@/utils/utils';
 import { DBError } from '@/utils/custom-error';
 import { Post, User } from '@prisma/client';
 
-const userRepository = {
+export const userRepository = {
   getById: async (id: number) => {
     const user = await prisma.user.findUnique({
       where: { id: id },
@@ -20,7 +20,7 @@ const userRepository = {
     return users;
   },
 
-  post: async (body: User) => {
+  create: async (body: User) => {
     const hash = await Bun.password.hash(body.password);
     try {
       const user = await prisma.user.create({
@@ -41,7 +41,7 @@ const userRepository = {
     }
   },
 
-  put: async (body: User) => {
+  update: async (body: User) => {
     try {
       const user = await prisma.user.update({
         where: {
@@ -66,30 +66,17 @@ const userRepository = {
       throw new DBError(`${id} is not found`, errorCode.NOT_FOUND);
     }
   },
-  addPost: async (user: User, posts: Post) => {
-    const post = await prisma.user.create({
-      data: {
-        id: user.id,
-        email: user.email,
-        password: user.password,
-        name: user.name,
-        post: {
-          create: { title: posts.title },
-        },
-      },
+
+  find: async (email: string, password: string) => {
+    const existedUser = await prisma.user.findFirst({
+      where: { password: password, email: email },
     });
-    return post;
-  },
-  getPost: async (id: number) => {
-    const post = await prisma.user.findFirst({
-      where: {
-        id: id,
-      },
-      select: {
-        post: true,
-      },
-    });
-    return post;
+
+    if (!existedUser) {
+      throw new DBError(`User is not found`, errorCode.NOT_FOUND);
+    }
+
+    return existedUser;
   },
 };
 

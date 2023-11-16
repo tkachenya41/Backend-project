@@ -1,18 +1,19 @@
-import { authRepository } from '@/repositories/authRepository.ts';
 import { Context } from 'hono';
 import { sign } from 'hono/jwt';
+import userRepository from '@/repositories/userRepository';
+import { DBError } from '@/utils/custom-error';
 
 export const authController = {
   getToken: async (c: Context) => {
     const { email, password } = await c.req.json();
-    const user = await authRepository.findUser(email, password);
-    const secret = 'mySecretKey';
+    const user = await userRepository.find(email, password);
+    const secret = process.env.SECRET_KEY!;
     const payload = {
       name: user.name,
       email: user.email,
     };
     const token = await sign(payload, secret);
-    return c.text(`token: ${token}`);
+    return c.text(token);
   },
 
   getPayload: (c: Context) => {
