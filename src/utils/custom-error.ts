@@ -6,3 +6,12 @@ export class DBError extends Error {
     this.code = code;
   }
 }
+
+export class ValidationError extends Error {
+  code: string;
+  constructor(message: string, code: string) {
+    super(message);
+    this.name = 'ValidationError';
+    this.code = code;
+  }
+}

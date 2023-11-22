@@ -20,12 +20,11 @@ export const userRepository = {
     return users;
   },
 
-  create: async (body: User) => {
+  create: async (body: Omit<User, 'id'>) => {
     const hash = await Bun.password.hash(body.password);
     try {
       const user = await prisma.user.create({
         data: {
-          id: body.id,
           email: body.email,
           name: body.name,
           password: hash,
@@ -35,13 +34,13 @@ export const userRepository = {
       return user;
     } catch (err) {
       throw new DBError(
-        `Something went wrong with DataBase, probably using existing 'id' or 'email' property`,
+        `Something went wrong with DataBase, probably using existing 'email' property`,
         errorCode.INTERNAL_SERVER_ERROR,
       );
     }
   },
 
-  update: async (body: User) => {
+  update: async (body: Omit<User, 'id'> & { id?: number }) => {
     try {
       const user = await prisma.user.update({
         where: {
@@ -67,14 +66,10 @@ export const userRepository = {
     }
   },
 
-  find: async (email: string, password: string) => {
+  find: async (email: string) => {
     const existedUser = await prisma.user.findFirst({
-      where: { password: password, email: email },
+      where: { email: email },
     });
-
-    if (!existedUser) {
-      throw new DBError(`User is not found`, errorCode.NOT_FOUND);
-    }
 
     return existedUser;
   },

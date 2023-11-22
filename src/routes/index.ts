@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
-import { userRoutes } from './userRoutes';
+import { userRoutes } from './user/userRoutes';
 import { authRoutes } from '@/routes/authRoutes.ts';
 import { DBErrorHandler } from '@/utils/error-handler';
-import { postRoutes } from './postRoutes';
+import { postRoutes } from './user/postRoutes';
 
 export const routes = new Hono();
 

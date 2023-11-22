@@ -1,15 +1,11 @@
 import { Context } from 'hono';
-import { DBError } from './custom-error';
+import { DBError, ValidationError } from './custom-error';
 import { errorCode } from './utils';
 import { formatZodError } from './error-formater';
 
 export function DBErrorHandler(err: Error, c: Context) {
   if (err instanceof DBError) {
     switch (err.code) {
-      case errorCode.INVALID: {
-        c.status(400);
-        break;
-      }
       case errorCode.CONNECTION: {
         c.status(502);
         break;
@@ -28,4 +24,15 @@ export function DBErrorHandler(err: Error, c: Context) {
   }
 
   return c.json(err.message);
+}
+
+export function ValidationErrorHandler(err: Error, c: Context) {
+  if (err instanceof ValidationError) {
+    switch (err.code) {
+      case errorCode.INVALID: {
+        c.status(400);
+        break;
+      }
+    }
+  }
 }

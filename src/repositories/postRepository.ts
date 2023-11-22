@@ -2,7 +2,7 @@ import { prisma } from '@/model/prisma';
 import { Post, User } from '@prisma/client';
 
 export const postRepository = {
-  addPost: async (user: User, posts: Post) => {
+  create: async (user: User, posts: Post) => {
     const post = await prisma.post.create({
       data: {
         user: {
@@ -17,7 +17,7 @@ export const postRepository = {
     });
     return post;
   },
-  getPost: async (id: number) => {
+  getById: async (id: number) => {
     const post = await prisma.user.findFirst({
       where: {
         id: id,
