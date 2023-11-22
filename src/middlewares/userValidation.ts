@@ -1,6 +1,6 @@
 import { ValidationError } from '@/utils/custom-error';
 import { errorCode } from '@/utils/utils';
-import { UserBodySchema } from '@/validation/body-check';
+import { PostBodySchema, UserBodySchema } from '@/validation/body-check';
 import { zValidator } from '@hono/zod-validator';
 import { validator } from 'hono/validator';
 
@@ -12,3 +12,5 @@ export const validateUserId = validator('param', (value: { id: string }) => {
 });
 
 export const validateUserBody = zValidator('json', UserBodySchema);
+
+export const validatePostBody = zValidator('json', PostBodySchema);

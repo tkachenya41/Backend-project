@@ -1,4 +1,4 @@
-import { BodyContextType, IdContextType } from '@/middlewares/types';
+import { UserBodyContext, IdContextType } from '@/middlewares/types';
 import userRepository from '@/repositories/userRepository';
 import { Context } from 'hono';
 
@@ -14,13 +14,13 @@ export const userController = {
     return c.json(users);
   },
 
-  create: async (c: BodyContextType) => {
+  create: async (c: UserBodyContext) => {
     const body = c.req.valid('json');
     const createdUser = await userRepository.create(body);
     return c.json(createdUser);
   },
 
-  update: async (c: BodyContextType) => {
+  update: async (c: UserBodyContext) => {
     const body = c.req.valid('json');
     const updatedUser = await userRepository.update(body);
     return c.json(updatedUser);
@@ -28,7 +28,7 @@ export const userController = {
 
   delete: async (c: IdContextType) => {
     const { id } = c.req.valid('param');
-    const userById = await userRepository.delete(Number(id));
+    const userById = await userRepository.delete(id);
     return c.json(userById);
   },
 };

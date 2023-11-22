@@ -13,3 +13,8 @@ export const UserBodySchema = z.object({
     .max(20)
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=(?:.*[@#$%^&*()_+=]){3})[\w\@#$%^&*()_+=]/),
 });
+
+export const PostBodySchema = z.object({
+  userId: z.number(),
+  title: z.string(),
+});

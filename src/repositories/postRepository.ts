@@ -1,4 +1,6 @@
 import { prisma } from '@/model/prisma';
+import { DBError } from '@/utils/custom-error';
+import { errorCode } from '@/utils/utils';
 import { Post, User } from '@prisma/client';
 
 export const postRepository = {
@@ -18,14 +20,43 @@ export const postRepository = {
     return post;
   },
   getById: async (id: number) => {
-    const post = await prisma.user.findFirst({
+    const post = await prisma.post.findFirst({
       where: {
-        id: id,
-      },
-      select: {
-        post: true,
+        userId: id,
       },
     });
+    if (!post) {
+      throw new DBError(`Post is not found`, errorCode.NOT_FOUND);
+    }
     return post;
+  },
+  getAll: async () => {
+    const posts = await prisma.post.findMany();
+    return posts;
+  },
+  delete: async (id: number) => {
+    try {
+      const post = await prisma.post.delete({
+        where: {
+          userId: id,
+        },
+      });
+      return post;
+    } catch (error) {
+      throw new DBError(`${id} is not found`, errorCode.NOT_FOUND);
+    }
+  },
+  update: async (post: Post) => {
+    try {
+      const existedPost = await prisma.post.update({
+        where: {
+          userId: post.userId,
+        },
+        data: post,
+      });
+      return existedPost;
+    } catch {
+      throw new DBError('Post not found', errorCode.NOT_FOUND);
+    }
   },
 };

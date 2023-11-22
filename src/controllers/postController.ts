@@ -1,16 +1,31 @@
+import { IdContextType, PostBodyContext } from '@/middlewares/types';
 import { postRepository } from '@/repositories/postRepository';
 import { Context } from 'hono';
 
 export const postController = {
-  addPost: async (c: Context) => {
+  create: async (c: Context) => {
     const body = await c.req.json();
     const post = await postRepository.create(body, body);
     return c.json(post);
   },
 
-  getPost: async (c: Context) => {
-    const { id } = c.req.param();
-    const posts = await postRepository.getById(Number(id));
+  getById: async (c: IdContextType) => {
+    const { id } = c.req.valid('param');
+    const posts = await postRepository.getById(id);
     return c.json(posts);
+  },
+  getAll: async (c: Context) => {
+    const posts = await postRepository.getAll();
+    return c.json(posts);
+  },
+  delete: async (c: IdContextType) => {
+    const { id } = c.req.valid('param');
+    const postById = await postRepository.delete(id);
+    return c.json(postById);
+  },
+  update: async (c: PostBodyContext) => {
+    const body = c.req.valid('json');
+    const updatedPost = await postRepository.update(body);
+    return c.json(updatedPost);
   },
 };

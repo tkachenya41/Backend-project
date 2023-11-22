@@ -1,10 +1,10 @@
 import { Context } from 'hono';
 import { sign } from 'hono/jwt';
 import userRepository from '@/repositories/userRepository';
-import { SignContextType } from '@/middlewares/types';
+import { SignContext } from '@/middlewares/types';
 
 export const authController = {
-  getToken: async (c: SignContextType) => {
+  getToken: async (c: SignContext) => {
     const { email } = c.req.valid('json');
     const user = await userRepository.find(email);
     const secret = process.env.SECRET_KEY!;
