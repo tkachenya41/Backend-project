@@ -1,6 +1,6 @@
 import { prisma } from '@/model/prisma';
 import { errorCode } from '@/utils/utils';
-import { DBError } from '@/utils/custom-error';
+import { DBError, ValidationError } from '@/utils/custom-error';
 import { User } from '@prisma/client';
 
 export const userRepository = {
@@ -48,6 +48,11 @@ export const userRepository = {
         },
         data: body,
       });
+      const isMatch = await Bun.password.verify(body.password, user.password);
+
+      if (!isMatch) {
+        throw new ValidationError('Password does not match', errorCode.INVALID);
+      }
       return user;
     } catch {
       throw new DBError('User not found', errorCode.NOT_FOUND);

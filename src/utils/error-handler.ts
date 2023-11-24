@@ -33,6 +33,14 @@ export function ValidationErrorHandler(err: Error, c: Context) {
         c.status(400);
         break;
       }
+      case errorCode.NOT_FOUND: {
+        c.status(404);
+        break;
+      }
     }
+  } else if (err) {
+    formatZodError(err, c);
   }
+
+  return c.json(err.message);
 }
