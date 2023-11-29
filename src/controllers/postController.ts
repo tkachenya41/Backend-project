@@ -3,9 +3,10 @@ import { postRepository } from '@/repositories/postRepository';
 import { Context } from 'hono';
 
 export const postController = {
-  create: async (c: Context) => {
-    const body = await c.req.json();
-    const post = await postRepository.create(body, body);
+  create: async (c: PostBodyContext) => {
+    const postBody = c.req.valid('json');
+    const userBody = await c.req.json();
+    const post = await postRepository.create(userBody, postBody);
     return c.json(post);
   },
 

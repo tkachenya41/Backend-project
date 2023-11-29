@@ -2,6 +2,7 @@ import { Context } from 'hono';
 import { DBError, ValidationError } from './custom-error';
 import { errorCode } from './utils';
 import { formatZodError } from './error-formater';
+import { HTTPException } from 'hono/http-exception';
 
 export function DBErrorHandler(err: Error, c: Context) {
   if (err instanceof DBError) {
@@ -37,8 +38,19 @@ export function ValidationErrorHandler(err: Error, c: Context) {
         c.status(404);
         break;
       }
+      case errorCode.UNAUTHORIZED: {
+        c.status(401);
+        break;
+      }
     }
-  } else if (err) {
+  } else if (err instanceof HTTPException) {
+    if (!err.getResponse().statusText) {
+      c.status(401);
+      return c.json('Missing authorization... You need to sign in and get access token');
+    }
+    c.status(400);
+    return c.json(err.getResponse().statusText);
+  } else {
     formatZodError(err, c);
   }
 

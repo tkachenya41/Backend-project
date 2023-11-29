@@ -14,6 +14,7 @@ model User {
   password String @unique
   profile Profile?
   post Post?
+  role  String  @default("USER")
 }
 
 model Profile {

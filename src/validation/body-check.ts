@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const UserBodySchema = z.object({
+  id: z.number().optional(),
   name: z
     .string()
     .min(1)

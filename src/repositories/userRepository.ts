@@ -2,6 +2,7 @@ import { prisma } from '@/model/prisma';
 import { errorCode } from '@/utils/utils';
 import { DBError, ValidationError } from '@/utils/custom-error';
 import { User } from '@prisma/client';
+import { userService } from '@/services/userService';
 
 export const userRepository = {
   getById: async (id: number) => {
@@ -20,14 +21,14 @@ export const userRepository = {
     return users;
   },
 
-  create: async (body: Omit<User, 'id'>) => {
-    const hash = await Bun.password.hash(body.password);
+  create: async (body: Omit<User, 'id' | 'role'>) => {
+    const hashPassword = await userService.hashPassword(body.password);
     try {
       const user = await prisma.user.create({
         data: {
           email: body.email,
           name: body.name,
-          password: hash,
+          password: hashPassword,
         },
       });
 
@@ -40,19 +41,22 @@ export const userRepository = {
     }
   },
 
-  update: async (body: Omit<User, 'id'> & { id?: number }) => {
+  update: async (body: Omit<User, 'id' | 'role'> & { id?: number }) => {
     try {
+      const hashPassword = await userService.hashPassword(body.password);
       const user = await prisma.user.update({
         where: {
           id: body.id,
         },
-        data: body,
+        data: {
+          email: body.email,
+          password: hashPassword,
+          name: body.name,
+        },
       });
-      const isMatch = await Bun.password.verify(body.password, user.password);
 
-      if (!isMatch) {
-        throw new ValidationError('Password does not match', errorCode.INVALID);
-      }
+      userService.verifyPassword(body.password, user.password);
+
       return user;
     } catch {
       throw new DBError('User not found', errorCode.NOT_FOUND);
@@ -71,10 +75,14 @@ export const userRepository = {
     }
   },
 
-  find: async (email: string) => {
+  findByEmail: async (email: string) => {
     const existedUser = await prisma.user.findFirst({
       where: { email: email },
     });
+
+    if (!existedUser) {
+      throw new DBError('User not found', errorCode.NOT_FOUND);
+    }
 
     return existedUser;
   },

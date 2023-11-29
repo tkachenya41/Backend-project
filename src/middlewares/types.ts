@@ -1,5 +1,6 @@
 import { validateSign } from './authValidation';
-import { validatePostBody, validateUserBody, validateUserId } from './userValidation';
+import { validatePostBody } from './postValidations';
+import { validateUserBody, validateUserId } from './userValidation';
 
 export type validateUserBody = typeof validateUserBody;
 export type UserBodyContext = Parameters<validateUserBody>[0];
