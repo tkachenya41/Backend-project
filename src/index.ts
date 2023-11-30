@@ -1,13 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { Hono } from "hono";
+import { routes } from "./routes";
 
-const prisma = new PrismaClient();
+const app = new Hono();
+app.route('/', routes);
 
-await prisma.user.create({
-  data: {
-    name: "Roman Tkachenya",
-    email: `tkachenya-${Math.random()}@gmail.com`,
-  },
-});
-
-const count = await prisma.user.count();
-console.log(`There are ${count} users in the database.`);
+export default {
+  port: 8000,
+  fetch: app.fetch,
+};
