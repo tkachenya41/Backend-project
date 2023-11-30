@@ -1,6 +1,6 @@
 import { prisma } from '@/model/prisma';
 import { errorCode } from '@/utils/utils';
-import { DBError, ValidationError } from '@/utils/custom-error';
+import { DBError } from '@/utils/custom-error';
 import { User } from '@prisma/client';
 import { userService } from '@/services/userService';
 
@@ -21,7 +21,7 @@ export const userRepository = {
     return users;
   },
 
-  create: async (body: Omit<User, 'id' | 'role'>) => {
+  create: async (body: User) => {
     const hashPassword = await userService.hashPassword(body.password);
     try {
       const user = await prisma.user.create({
@@ -41,7 +41,7 @@ export const userRepository = {
     }
   },
 
-  update: async (body: Omit<User, 'id' | 'role'> & { id?: number }) => {
+  update: async (body: User) => {
     try {
       const hashPassword = await userService.hashPassword(body.password);
       const user = await prisma.user.update({
@@ -54,8 +54,6 @@ export const userRepository = {
           name: body.name,
         },
       });
-
-      userService.verifyPassword(body.password, user.password);
 
       return user;
     } catch {

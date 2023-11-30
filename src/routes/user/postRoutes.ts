@@ -1,5 +1,5 @@
 import { postController } from '@/controllers/postController';
-import { CheckUser, checkAdmin } from '@/middlewares/authValidation';
+import { checkAdmin } from '@/middlewares/authValidation';
 import { validateUserId } from '@/middlewares/userValidation';
 import { validatePostBody } from '@/middlewares/postValidations';
 import { Hono } from 'hono';

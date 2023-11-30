@@ -2,7 +2,7 @@
   "name": "bun-app",
   "version": "1.0.50",
   "prisma": {
-    "seed": "node --loader ts-node/esm prisma/seed.ts"
+    "seed": "bun prisma/seed.ts"
   },
   "type": "module",
   "scripts": {

@@ -45,10 +45,8 @@ export function ValidationErrorHandler(err: Error, c: Context) {
     }
   } else if (err instanceof HTTPException) {
     if (!err.getResponse().statusText) {
-      c.status(401);
-      return c.json('Missing authorization... You need to sign in and get access token');
+      return c.json('Missing authorization... You need to sign in');
     }
-    c.status(400);
     return c.json(err.getResponse().statusText);
   } else {
     formatZodError(err, c);

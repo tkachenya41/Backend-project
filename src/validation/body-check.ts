@@ -15,6 +15,8 @@ export const UserBodySchema = z.object({
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=(?:.*[@#$%^&*()_+=]){3})[\w\@#$%^&*()_+=]/),
 });
 
+export const SignSchema = UserBodySchema.pick({ email: true, password: true });
+
 export const PostBodySchema = z.object({
   userId: z.number(),
   title: z.string(),

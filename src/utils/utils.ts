@@ -5,3 +5,8 @@ export const errorCode = {
   INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
   UNAUTHORIZED: 'UNAUTHORIZED',
 } as const;
+
+export const roles = {
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+} as const;
